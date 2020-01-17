@@ -1,0 +1,36 @@
+
+#download nt fasta from ncbi ftp
+ftp://ftp.ncbi.nlm.nih.gov/blast/db/FASTA/nt.gz
+
+#extract from blast db
+blastdbcmd -db nt -dbtype nucl -entry all -out nt_extracted
+blastdbcmd -db 16SMicrobial -dbtype nucl -entry all -out 16SMicrobial_extracted
+blastdbcmd -db Representative_Genomes -dbtype nucl -entry all -out bacterial_extracted
+
+
+#extract taxid mapping from blast db (needed for later taxonomy mapping)
+blastdbcmd -db nt -dbtype nucl -entry all -outfmt "%i %T" -out nt_extracted.map
+blastdbcmd -db 16SMicrobial -dbtype nucl -entry all -outfmt "%i %T" -out 16SMicrobial_extracted.map
+blastdbcmd -db Representative_Genomes -dbtype nucl -entry all -outfmt "%i %T" -out bacterial_extracted.map
+
+#extract more taxonomy info
+blastdbcmd -db nt -dbtype nucl -entry all -outfmt "%i\t%T\t%l\t%L\t%S\t%K" -out nt_extracted_taxa.tsv
+blastdbcmd -db Representative_Genomes -dbtype nucl -entry all -outfmt "%i\t%T\t%l\t%L\t%S\t%K" -out bacterial_extracted_taxa.tsv
+
+
+
+#convert nt with ambiguity code
+awk '{if($0 ~ ">"){print $0}else{print gensub("C","Y",$0)}}' nt_extracted >nt_extracted_amb
+#convert nt with C-->T
+awk '{if($0 ~ ">"){print $0}else{print gensub("C","T",$0)}}' nt_extracted >nt_extracted_conv
+awk '{if($0 ~ ">"){print $0}else{print gensub("C","T",$0)}}' 16SMicrobial_extracted >16SMicrobial_extracted_conv
+awk '{if($0 ~ ">"){print $0}else{print gensub("C","T",$0)}}' bacterial_extracted >bacterial_extracted_conv
+
+
+#transform to blast db
+/data/groups/lab_bock/jklughammer/resources/tools_general/ncbi-blast-2.4.0+/bin/makeblastdb -in nt_conv -parse_seqids -dbtype nucl -max_file_sz '2GB' -taxid_map nt_extracted.map -out nt_conv_db/nt_conv
+/data/groups/lab_bock/jklughammer/resources/tools_general/ncbi-blast-2.4.0+/bin/makeblastdb -in nt_extracted_amb -parse_seqids -dbtype nucl -max_file_sz '2GB' -taxid_map nt_extracted.map -out nt_extracted_amb_db/nt_amb
+
+/data/groups/lab_bock/jklughammer/resources/tools_general/ncbi-blast-2.4.0+/bin/makeblastdb -in 16SMicrobial_extracted_conv -parse_seqids -dbtype nucl -max_file_sz '2GB' -taxid_map 16SMicrobial_extracted.map -out 16SMicrobial_extracted_conv_db/16SMicrobial_conv
+
+/data/groups/lab_bock/jklughammer/resources/tools_general/ncbi-blast-2.4.0+/bin/makeblastdb -in bacterial_extracted_conv -parse_seqids -dbtype nucl -max_file_sz '2GB' -taxid_map bacterial_extracted.map -out bacterial_extracted_conv_db/bacterial_conv
