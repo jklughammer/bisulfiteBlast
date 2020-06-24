@@ -3,9 +3,9 @@
 in_bam=$1
 topn=$2 #number of random reads to check
 subfolder=$3
-db=$4 #nt, nt_conv, nt_amb
-convert=$5 #TRUE #FALSE
-resMotifs=$6 #"CGG|CGA"
+db=$4 #nt, nt_conv, nt_amb #blast db to use. Needs to be created first --> see createDB
+convert=$5 #TRUE #FALSE #should input sequences be converted? In case of bisulfite converted data coose TRUE.
+resMotifs=$6 #"CGG|CGA" # restriction sides in RRBS data.
 sample=$7
 
 out=$(dirname $(dirname $in_bam))/$subfolder/$sample
