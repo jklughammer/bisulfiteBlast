@@ -3,10 +3,10 @@
 sample_dir=$1  #results_pipeline directory of the auto RefFreeDMA pipeline
 subset=$2 #species id
 topn=1000
-db="nt_conv" #"bacterial_conv" #"16SMicrobial_conv"
+db="nt_conv" #"bacterial_conv" #"16SMicrobial_conv" #specify blast db to use (needs to be created first --> see createDB)
 subfolder="bisulfiteBlast_$db"
 convert="TRUE"
-resMotifs="CGG|CGA"
+resMotifs="CGG|CGA" #for RRBS select restriction binding sites (i.e. bases with which valid reads can start)
 
 scripts=$(cd "$(dirname $0)"; pwd)
 
