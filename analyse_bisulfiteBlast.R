@@ -6,23 +6,27 @@ options(stringsAsFActors=FALSE)
 
 args=commandArgs(trailingOnly = TRUE)
 readno=args[2]
-#readno=1000
-db=args[3]
-#db="nt" #"bacterial" "nt" 
-
-#setwd("/scratch/lab_bock/jklughammer/projects/compEpi_uc/results_pipeline/")
+db=args[3] 
 setwd(args[1])
-annot=fread("/data/groups/lab_bock/jklughammer/gitRepos/compEpi/meta/Patholist_selection.tsv")
-stats_files=system(paste0("ls */*",db,"*/*unmapped-blast.txt"),intern=TRUE)
-taxa=fread(paste0("/scratch/lab_bock/shared/resources/blastDB/fasta/",db,"_extracted_taxa.tsv"),sep="\t")
+
+#Annotation table containing all sample annotations in your project. Must contain columsn "Abbreviateion" for species abbreviation/name used in RefFreeDMA, 
+#"English" for English common name, and "scientific_name" for the scientific name of the species. 
+annot=fread("<your path>/meta/Patholist_selection.tsv")
+annot_red=annot[,list(common_name_query=English[1],scientific_name_query=scientific_name[1]),by="Abbreviation"]
+
+
+# blast db taxa annotation needs to be created first (see createDB)
+taxa=fread(paste0("<your path>/blastDB/fasta/",db,"_extracted_taxa.tsv"),sep="\t") 
 setnames(taxa,names(taxa),c("id","taxid","length","common_name_query","species_complete","kingdom"))
 
+#read stats files for all species
+stats_files=system(paste0("ls */*",db,"*/*unmapped-blast.txt"),intern=TRUE)
 
+#set colors
 diff_cols=c("#e41a1c","#1D81F3","#4daf4a","#984ea3","#ff7f00","#F5DC3F","#964B00","pink","#999999")
 
 
-annot_red=annot[,list(common_name_query=English[1],scientific_name_query=scientific_name[1]),by="Abbreviation"]
-
+#now loop through all stats of all species
 all_stats=data.table()
 for(file in stats_files){
   sample=unlist(strsplit(basename(file),"_unmapped-blast.txt"))[1]
@@ -58,7 +62,6 @@ pl=list()
 suffix="filt"
 for (sel_species in all_species){
   print(sel_species)
-#  sel_stats=all_stats[rrbs_species==sel_species][length>qlen*0.9&pident>92]
   sel_stats=all_stats[rrbs_species==sel_species]
   
   out_dir=sel_stats$dir[1]
