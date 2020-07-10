@@ -18,5 +18,5 @@ awk '{if($0 ~ ">"){print $0}else{print gensub("C","T",$0)}}' nt_extracted >nt_ex
 #awk '{if($0 ~ ">"){print $0}else{print gensub("C","Y",$0)}}' nt_extracted >nt_extracted_amb
 
 #transform to blast db
-ncbi-blast-2.4.0+/bin/makeblastdb -in nt_conv -parse_seqids -dbtype nucl -max_file_sz '2GB' -taxid_map nt_extracted.map -out nt_conv_db/nt_conv
+ncbi-blast-2.4.0+/bin/makeblastdb -in nt_extracted_conv -parse_seqids -dbtype nucl -max_file_sz '2GB' -taxid_map nt_extracted.map -out nt_conv_db/nt_conv
 #ncbi-blast-2.4.0+/bin/makeblastdb -in nt_extracted_amb -parse_seqids -dbtype nucl -max_file_sz '2GB' -taxid_map nt_extracted.map -out nt_extracted_amb_db/nt_amb
