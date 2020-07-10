@@ -16,7 +16,7 @@ annot_red=annot[,list(common_name_query=English[1],scientific_name_query=scienti
 
 
 # blast db taxa annotation needs to be created first (see createDB)
-taxa=fread(paste0("<your path>/blastDB/fasta/",db,"_extracted_taxa.tsv"),sep="\t") 
+taxa=fread(paste0("<your path>/blastDB/",db,"_extracted_taxa.tsv"),sep="\t") 
 setnames(taxa,names(taxa),c("id","taxid","length","common_name_query","species_complete","kingdom"))
 
 #read stats files for all species
