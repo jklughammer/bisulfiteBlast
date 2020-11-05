@@ -5,9 +5,9 @@ theme_set(theme_bw())
 options(stringsAsFActors=FALSE)
 
 args=commandArgs(trailingOnly = TRUE)
-readno=args[2]
-db=args[3] 
-setwd(args[1])
+readno=args[2] #1000
+db=args[3] #nt_conv
+setwd(args[1]) #folder that contains all the species-wise run folders
 
 #Annotation table containing all sample annotations in your project. Must contain columsn "Abbreviateion" for species abbreviation/name used in RefFreeDMA, 
 #"English" for English common name, and "scientific_name" for the scientific name of the species. 
